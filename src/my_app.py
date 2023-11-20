@@ -839,4 +839,4 @@ def show_selected_residue(atom_ids, selected_pdb_file):
 
 # Run app
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)
