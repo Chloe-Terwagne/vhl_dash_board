@@ -298,12 +298,12 @@ links_content = dbc.Card(
 
 # Build your components------------------------------------------------------------------------------------------------
 # 3D parsing & styling
-parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/1LM8_vhl_isolated.pdb?raw=true')
-v_data = parser.mol3d_data()
-styles = create_style_3d(
-    df, 'average_fs_missense_at_aa_rna', v_data['atoms'], visualization_type='cartoon', color_element='residue_score')
-vhl_3D = dashbio.Molecule3dViewer(id='dashbio-default-molecule3d', modelData=v_data, styles=styles, backgroundOpacity=0,
-                                  selectionType='residue', backgroundColor="black", height=600, width=735) #,width=735)  # , zoom=dict(factor=1.9,animationDuration=30000, fixedPath=False))
+# parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/1LM8_vhl_isolated.pdb?raw=true')
+# v_data = parser.mol3d_data()
+# styles = create_style_3d(
+#     df, 'average_fs_missense_at_aa_rna', v_data['atoms'], visualization_type='cartoon', color_element='residue_score')
+# vhl_3D = dashbio.Molecule3dViewer(id='dashbio-default-molecule3d', modelData=v_data, styles=styles, backgroundOpacity=0,
+#                                   selectionType='residue', backgroundColor="black", height=600, width=735) #,width=735)  # , zoom=dict(factor=1.9,animationDuration=30000, fixedPath=False))
 
 overview_title = dcc.Markdown(children='', style=dict(font_family=font_list[idx_font], font_color=yel))
 list_var_to_display_first = ["c.256C>A", "c.111G>T", "c.264G>C"]
@@ -377,73 +377,73 @@ app.layout = \
         ], justify='around'),
         dbc.Row([dbc.Col([at_scale], className="my-custom-switch", width={'size': 2, 'offset': 10})]),
         # Combined Graph 2 and Graph 3 ----------------------
-        dbc.Row(dbc.Col([pdb_selector_drop], width={'size': 2, 'offset': 10})),
-        dbc.Row(dbc.Col([vizua_type_3d], width={'size': 3, 'offset': 6})),
-        dbc.Row(
-            [
-                # Graph 2
-                dbc.Col(
-                    [
-                        two_d_graph,
-                        dbc.Row(
-                            [
-                                dbc.Col(
-                                    html.Div([
-                                        html.H5("Select a x-axis predictor score"),
-                                        x_dropdown
-                                    ], className='my-custom-title', style={'background-color': dark_gray, 'padding': '20px 20px 20px 20px',
-                                              'margin': '0'}),
-                                    md=6  # 6 columns for x_dropdown
-                                ),
-                                dbc.Col(
-                                    html.Div([
-                                        html.H5('Select a y-axis experimental score'),
-                                        y_dropdown
-                                    ], className='my-custom-title', style={'background-color': dark_gray, 'padding': '20px 20px 20px 20px',
-                                              'margin-left': '-30px'}),
-                                    md=6  # 6 columns for y_dropdown
-                                ),
-                            ],
-                            # style={'margin-bottom': '20px'}  # Adjust margin between dropdowns and plot
-                        ),
-                    ],
-                    md=6  # 12 columns for the entire width of the plot and dropdowns in Graph 2
-                ),
-
-                # Graph 3
-                dbc.Col(
-                    [
-                        dbc.Row(vhl_3D),  # 3D protein
-                        dbc.Row(dbc.Col([mol_viewer_colorbar], md=6)),
-                        dbc.Row(dbc.Col(html.H1("Averaged missense variant function score per residue mapped on VHL structure", className='custom-h1', style={
-                                                        'font-size': '18pt', 'text-align': 'left', "margin-left": '45px',"margin-top":'-80px','position': 'relative'}), width={'size': 9, 'offset': 2})),
-                        dbc.Row([
-                                dbc.Col(
-                                            [
-                                                html.Div(
-                                                    id='default-molecule3d-output',
-                                                    style={
-                                                        'background-color': dark_gray_transp,
-                                                        'padding': '15px',
-                                                        'padding-bottom': '102px',
-                                                        'position': 'relative',
-                                                         "margin-top":'0px',
-                                                        "margin-left": '2px',
-                                                        'z-index': '1'
-                                                    }
-                                                ),
-                                            ]
-                                        )
-
-                            ],
-                            className='custom-text_left',
-                        ),
-                    ],
-                ),
-            ],
-        ),
-        dbc.Row(html.Br()),
-        dbc.Row(links_content)
+        # dbc.Row(dbc.Col([pdb_selector_drop], width={'size': 2, 'offset': 10})),
+        # dbc.Row(dbc.Col([vizua_type_3d], width={'size': 3, 'offset': 6})),
+        # dbc.Row(
+        #     [
+        #         # Graph 2
+        #         dbc.Col(
+        #             [
+        #                 two_d_graph,
+        #                 dbc.Row(
+        #                     [
+        #                         dbc.Col(
+        #                             html.Div([
+        #                                 html.H5("Select a x-axis predictor score"),
+        #                                 x_dropdown
+        #                             ], className='my-custom-title', style={'background-color': dark_gray, 'padding': '20px 20px 20px 20px',
+        #                                       'margin': '0'}),
+        #                             md=6  # 6 columns for x_dropdown
+        #                         ),
+        #                         dbc.Col(
+        #                             html.Div([
+        #                                 html.H5('Select a y-axis experimental score'),
+        #                                 y_dropdown
+        #                             ], className='my-custom-title', style={'background-color': dark_gray, 'padding': '20px 20px 20px 20px',
+        #                                       'margin-left': '-30px'}),
+        #                             md=6  # 6 columns for y_dropdown
+        #                         ),
+        #                     ],
+        #                     # style={'margin-bottom': '20px'}  # Adjust margin between dropdowns and plot
+        #                 ),
+        #             ],
+        #             md=6  # 12 columns for the entire width of the plot and dropdowns in Graph 2
+        #         ),
+        #
+        #         # Graph 3
+        #         dbc.Col(
+        #             [
+        #                 dbc.Row(vhl_3D),  # 3D protein
+        #                 dbc.Row(dbc.Col([mol_viewer_colorbar], md=6)),
+        #                 dbc.Row(dbc.Col(html.H1("Averaged missense variant function score per residue mapped on VHL structure", className='custom-h1', style={
+        #                                                 'font-size': '18pt', 'text-align': 'left', "margin-left": '45px',"margin-top":'-80px','position': 'relative'}), width={'size': 9, 'offset': 2})),
+        #                 dbc.Row([
+        #                         dbc.Col(
+        #                                     [
+        #                                         html.Div(
+        #                                             id='default-molecule3d-output',
+        #                                             style={
+        #                                                 'background-color': dark_gray_transp,
+        #                                                 'padding': '15px',
+        #                                                 'padding-bottom': '102px',
+        #                                                 'position': 'relative',
+        #                                                  "margin-top":'0px',
+        #                                                 "margin-left": '2px',
+        #                                                 'z-index': '1'
+        #                                             }
+        #                                         ),
+        #                                     ]
+        #                                 )
+        #
+        #                     ],
+        #                     className='custom-text_left',
+        #                 ),
+        #             ],
+        #         ),
+        #     ],
+        # ),
+        # dbc.Row(html.Br()),
+        # dbc.Row(links_content)
 
     ], fluid=True)
 
@@ -637,205 +637,205 @@ def update_overview_graph(column_name, y_axis_nucleotide, color_blind, at_scale,
     )
 
     return fig.update_layout(uirevision=True)
-
-
-@app.callback(
-    Output(component_id=two_d_graph, component_property='figure'),
-    Input(overview_dropdown, 'value'),
-    Input(component_id=overview_graph, component_property="selectedData"),
-    Input(x_dropdown, 'value'),
-    Input(y_dropdown, 'value'),
-    Input(variant_highlight_dropd, 'value'),
-    Input(color_blind_option, 'on')
-)
-def update_2d_graph(color_column, slct_data, x_col, y_col, highlight_var, color_blind):
-    black3dbg = dict(showgrid=True, gridcolor=yel_exon, gridwidth=0.5,
-                     zeroline=False)
-
-    if color_blind:
-        colors = DICT_COL_BLIND
-    else:
-        colors = DICT_COL_REG
-
-    df_t = df
-    fig2 = go.Figure()
-
-    #  selection with no points inside
-    if slct_data is not None and slct_data['points'] == []:
-        empty_trace = go.Scatter()
-        fig2.add_trace(empty_trace)
-        title = "Please select at least one variant"
-
-    else:
-        # if subset of point( >< not all points)
-        if (slct_data is not None) and slct_data != {'points': []}:
-            # Remove reference allele from slct_data -> remove points that doesn't have custom data columns
-            slct_data['points'] = [point for point in slct_data['points'] if 'customdata' in point]
-
-            if not slct_data['points']:
-                empty_trace = go.Scatter()
-                fig2.add_trace(empty_trace)
-                title = "Please select at least one variant"
-            else:
-                # subset data based on selection
-                var = [slct_data['points'][i]['customdata'][0] for i in range(len(slct_data['points']))]
-
-                print("var:", var)
-                df_t = df_t[df_t.variant_id.isin(var)]
-                title = "Variants selected"
-        else:
-            subtittle = "<br><sup>Choose the rectangle tool in the menu bar of the gene overview above to subset variants of interest.</sup>"
-            title = "All variants" + subtittle
-
-        # highlighted variants settings
-        if highlight_var is not None and highlight_var != []:
-            transparency = 0.45
-            # Create a DataFrame for highlighted points
-            subset_var_highlight_df = df_t[df_t['variant_id'].isin(highlight_var)]
-        else:
-            transparency = 1
-            subset_var_highlight_df = pd.DataFrame()
-
-        # Iterate through the unique categories in your data in the custom order
-        for category in CUSTOM_CAT_ORDER:
-            # Iterate through the unique categories in your data
-            if category in df_t[color_column].unique():
-                # Filter data for the current category
-                category_data = df_t[df_t[color_column] == category]
-
-                # Create a Scatter trace for the current category
-                scatter_trace = go.Scatter(
-                    x=category_data[x_col],
-                    y=category_data[y_col],
-                    mode='markers',
-                    customdata=category_data[hover_columns],
-                    marker=dict(
-                        size=6,
-                        color=colors[category],  # Use color from dict_color_consq
-                        opacity=transparency
-                    ),
-                    hovertemplate="<br>".join(hover_text),
-                    name=category  # Set the name for the legend
-                )
-
-                # Add the Scatter trace to the figure
-                fig2.add_trace(scatter_trace)
-
-        # plot variant to highlight
-        if highlight_var is not None and highlight_var != []:
-            highlight_trace = go.Scatter(
-                x=subset_var_highlight_df[x_col],
-                y=subset_var_highlight_df[y_col],
-                mode='markers',
-                opacity=1,
-                marker=dict(
-                    size=7,
-                    line=dict(width=3, color=yellow),
-                    autocolorscale=True,
-                    color=yellow),
-                customdata=subset_var_highlight_df[hover_columns],
-                hovertemplate="<br>".join(hover_text),
-                name="Highlited variants")
-            fig2.add_trace(highlight_trace)
-    # Make it looks cute
-    fig2.update_layout(plot_bgcolor=dark_gray,
-                       xaxis_title=dict(text=x_col, font=dict(color=yel)),
-                       yaxis_title=dict(text=y_col, font=dict(color=yel)),
-                       xaxis=black3dbg,
-                       yaxis=black3dbg,
-                       paper_bgcolor='rgb(41,41,41)',
-                       font_family=font_list[idx_font],
-                       font_color=yel,
-                       title_font_family=font_list[idx_font],
-                       title_text=title,
-                       title_y=0.955,
-                       title_font_color=yel,
-                       title_font_size=18,
-                       showlegend=True,
-                       height=650,
-                       legend=dict(orientation='v', yanchor='bottom', y=0, xanchor='left', x=0, title=color_column,
-                                   font=dict(color=yel), bgcolor='rgba(41,41,41,0.65)'),
-                       modebar=dict(
-                           bgcolor=transparent,
-                           activecolor=yel,
-                           color=yellow)
-                       )
-
-    return fig2.update_layout(uirevision=True)
-
-
-@app.callback(
-    Output('dashbio-default-molecule3d', 'modelData'),
-    Output('dashbio-default-molecule3d', 'styles'),
-    Input('pdb-selector', 'value'),
-    Input('vizua_type_3d', 'value'),
-    Input(variant_highlight_dropd, 'value'),
-)
-def update_stucture_based_dropdown(selected_pdb_file, vizu_type, highlight_var):
-    data = get_structure_file(selected_pdb_file)
-    styles = create_style_3d(
-        df, 'average_fs_missense_at_aa_rna', data['atoms'], visualization_type=vizu_type,
-        color_element='residue_score', hightlight_vars=highlight_var)
-    return data, styles
-
-
-@app.callback(
-    Output(variant_highlight_dropd, 'value'),
-    Input('dashbio-default-molecule3d', 'selectedAtomIds'),
-    Input('pdb-selector', 'value'),
-)
-def update_dropdown_based_stucture(atom_ids, selected_pdb_file):
-    data = get_structure_file(selected_pdb_file)
-    list_var = []  # variants list selected to put in dropdown
-    # Get residue index from 60 to 209 to match the structure when VHL
-    for elem in data['atoms']:
-        if elem['chain'] == 'V':
-            elem['residue_index'] = elem['residue_index'] + 60
-        else:
-            elem['residue_index'] = -1
-
-    if atom_ids is not None and len(atom_ids) > 0:
-        last_atom_dict = data['atoms'][atom_ids[-1]]
-        subset_df = df.loc[
-            (df['protPos'] == last_atom_dict['residue_index']) & (~df['average_fs_missense_at_aa_rna'].isna())]
-
-        if len(list(subset_df['variant_id'])) >= 1:
-            list_var = list(subset_df['variant_id'])
-    return list_var
-
-
-@app.callback(
-    Output('default-molecule3d-output', 'children'),
-    Input('dashbio-default-molecule3d', 'selectedAtomIds'),
-    Input('pdb-selector', 'value')
-)
-def show_selected_residue(atom_ids, selected_pdb_file):
-    data = get_structure_file(selected_pdb_file)
-
-    chain_dict = {'H': 'HIF 1A', 'V': 'VHL', 'C': "ELOC", 'B': "ELOB"}
-    # Get residue index from 60 to 209 to match the structure when VHL
-    for elem in data['atoms']:
-        if elem['chain'] == 'V':
-            elem['residue_index'] = elem['residue_index'] + 60
-        else:
-            elem['residue_index'] = -1
-
-    if atom_ids is None or len(atom_ids) == 0:
-        return 'Click somewhere on the VHL protein structure to select an amino acid.'
-
-    else:
-        last_atom_dict = data['atoms'][atom_ids[-1]]
-        # return Only protein / Chain when not VHL
-        if (last_atom_dict['chain'] == 'C') or (last_atom_dict['chain'] == 'H'):
-            prot = 'Protein: ', chain_dict[str(last_atom_dict['chain'])],
-            phr1 = 'Click somewhere on the VHL protein structure to select an amino acid.'
-            return html.Div([html.Br(), html.Div(prot), html.Br(), html.Div(phr1), html.Br()])
-
-    aa_name = 'Reference amino acid: ', last_atom_dict['residue_name'], \
-        ', position: ', str(last_atom_dict['residue_index'])
-    subset_df = df.loc[(df['protPos'] == last_atom_dict['residue_index']) &
-                       (~df['average_fs_missense_at_aa_rna'].isna())]
-    return print_var_score_for_selected_residue(subset_df, aa_name)
+#
+#
+# @app.callback(
+#     Output(component_id=two_d_graph, component_property='figure'),
+#     Input(overview_dropdown, 'value'),
+#     Input(component_id=overview_graph, component_property="selectedData"),
+#     Input(x_dropdown, 'value'),
+#     Input(y_dropdown, 'value'),
+#     Input(variant_highlight_dropd, 'value'),
+#     Input(color_blind_option, 'on')
+# )
+# def update_2d_graph(color_column, slct_data, x_col, y_col, highlight_var, color_blind):
+#     black3dbg = dict(showgrid=True, gridcolor=yel_exon, gridwidth=0.5,
+#                      zeroline=False)
+#
+#     if color_blind:
+#         colors = DICT_COL_BLIND
+#     else:
+#         colors = DICT_COL_REG
+#
+#     df_t = df
+#     fig2 = go.Figure()
+#
+#     #  selection with no points inside
+#     if slct_data is not None and slct_data['points'] == []:
+#         empty_trace = go.Scatter()
+#         fig2.add_trace(empty_trace)
+#         title = "Please select at least one variant"
+#
+#     else:
+#         # if subset of point( >< not all points)
+#         if (slct_data is not None) and slct_data != {'points': []}:
+#             # Remove reference allele from slct_data -> remove points that doesn't have custom data columns
+#             slct_data['points'] = [point for point in slct_data['points'] if 'customdata' in point]
+#
+#             if not slct_data['points']:
+#                 empty_trace = go.Scatter()
+#                 fig2.add_trace(empty_trace)
+#                 title = "Please select at least one variant"
+#             else:
+#                 # subset data based on selection
+#                 var = [slct_data['points'][i]['customdata'][0] for i in range(len(slct_data['points']))]
+#
+#                 print("var:", var)
+#                 df_t = df_t[df_t.variant_id.isin(var)]
+#                 title = "Variants selected"
+#         else:
+#             subtittle = "<br><sup>Choose the rectangle tool in the menu bar of the gene overview above to subset variants of interest.</sup>"
+#             title = "All variants" + subtittle
+#
+#         # highlighted variants settings
+#         if highlight_var is not None and highlight_var != []:
+#             transparency = 0.45
+#             # Create a DataFrame for highlighted points
+#             subset_var_highlight_df = df_t[df_t['variant_id'].isin(highlight_var)]
+#         else:
+#             transparency = 1
+#             subset_var_highlight_df = pd.DataFrame()
+#
+#         # Iterate through the unique categories in your data in the custom order
+#         for category in CUSTOM_CAT_ORDER:
+#             # Iterate through the unique categories in your data
+#             if category in df_t[color_column].unique():
+#                 # Filter data for the current category
+#                 category_data = df_t[df_t[color_column] == category]
+#
+#                 # Create a Scatter trace for the current category
+#                 scatter_trace = go.Scatter(
+#                     x=category_data[x_col],
+#                     y=category_data[y_col],
+#                     mode='markers',
+#                     customdata=category_data[hover_columns],
+#                     marker=dict(
+#                         size=6,
+#                         color=colors[category],  # Use color from dict_color_consq
+#                         opacity=transparency
+#                     ),
+#                     hovertemplate="<br>".join(hover_text),
+#                     name=category  # Set the name for the legend
+#                 )
+#
+#                 # Add the Scatter trace to the figure
+#                 fig2.add_trace(scatter_trace)
+#
+#         # plot variant to highlight
+#         if highlight_var is not None and highlight_var != []:
+#             highlight_trace = go.Scatter(
+#                 x=subset_var_highlight_df[x_col],
+#                 y=subset_var_highlight_df[y_col],
+#                 mode='markers',
+#                 opacity=1,
+#                 marker=dict(
+#                     size=7,
+#                     line=dict(width=3, color=yellow),
+#                     autocolorscale=True,
+#                     color=yellow),
+#                 customdata=subset_var_highlight_df[hover_columns],
+#                 hovertemplate="<br>".join(hover_text),
+#                 name="Highlited variants")
+#             fig2.add_trace(highlight_trace)
+#     # Make it looks cute
+#     fig2.update_layout(plot_bgcolor=dark_gray,
+#                        xaxis_title=dict(text=x_col, font=dict(color=yel)),
+#                        yaxis_title=dict(text=y_col, font=dict(color=yel)),
+#                        xaxis=black3dbg,
+#                        yaxis=black3dbg,
+#                        paper_bgcolor='rgb(41,41,41)',
+#                        font_family=font_list[idx_font],
+#                        font_color=yel,
+#                        title_font_family=font_list[idx_font],
+#                        title_text=title,
+#                        title_y=0.955,
+#                        title_font_color=yel,
+#                        title_font_size=18,
+#                        showlegend=True,
+#                        height=650,
+#                        legend=dict(orientation='v', yanchor='bottom', y=0, xanchor='left', x=0, title=color_column,
+#                                    font=dict(color=yel), bgcolor='rgba(41,41,41,0.65)'),
+#                        modebar=dict(
+#                            bgcolor=transparent,
+#                            activecolor=yel,
+#                            color=yellow)
+#                        )
+#
+#     return fig2.update_layout(uirevision=True)
+#
+#
+# @app.callback(
+#     Output('dashbio-default-molecule3d', 'modelData'),
+#     Output('dashbio-default-molecule3d', 'styles'),
+#     Input('pdb-selector', 'value'),
+#     Input('vizua_type_3d', 'value'),
+#     Input(variant_highlight_dropd, 'value'),
+# )
+# def update_stucture_based_dropdown(selected_pdb_file, vizu_type, highlight_var):
+#     data = get_structure_file(selected_pdb_file)
+#     styles = create_style_3d(
+#         df, 'average_fs_missense_at_aa_rna', data['atoms'], visualization_type=vizu_type,
+#         color_element='residue_score', hightlight_vars=highlight_var)
+#     return data, styles
+#
+#
+# @app.callback(
+#     Output(variant_highlight_dropd, 'value'),
+#     Input('dashbio-default-molecule3d', 'selectedAtomIds'),
+#     Input('pdb-selector', 'value'),
+# )
+# def update_dropdown_based_stucture(atom_ids, selected_pdb_file):
+#     data = get_structure_file(selected_pdb_file)
+#     list_var = []  # variants list selected to put in dropdown
+#     # Get residue index from 60 to 209 to match the structure when VHL
+#     for elem in data['atoms']:
+#         if elem['chain'] == 'V':
+#             elem['residue_index'] = elem['residue_index'] + 60
+#         else:
+#             elem['residue_index'] = -1
+#
+#     if atom_ids is not None and len(atom_ids) > 0:
+#         last_atom_dict = data['atoms'][atom_ids[-1]]
+#         subset_df = df.loc[
+#             (df['protPos'] == last_atom_dict['residue_index']) & (~df['average_fs_missense_at_aa_rna'].isna())]
+#
+#         if len(list(subset_df['variant_id'])) >= 1:
+#             list_var = list(subset_df['variant_id'])
+#     return list_var
+#
+#
+# @app.callback(
+#     Output('default-molecule3d-output', 'children'),
+#     Input('dashbio-default-molecule3d', 'selectedAtomIds'),
+#     Input('pdb-selector', 'value')
+# )
+# def show_selected_residue(atom_ids, selected_pdb_file):
+#     data = get_structure_file(selected_pdb_file)
+#
+#     chain_dict = {'H': 'HIF 1A', 'V': 'VHL', 'C': "ELOC", 'B': "ELOB"}
+#     # Get residue index from 60 to 209 to match the structure when VHL
+#     for elem in data['atoms']:
+#         if elem['chain'] == 'V':
+#             elem['residue_index'] = elem['residue_index'] + 60
+#         else:
+#             elem['residue_index'] = -1
+#
+#     if atom_ids is None or len(atom_ids) == 0:
+#         return 'Click somewhere on the VHL protein structure to select an amino acid.'
+#
+#     else:
+#         last_atom_dict = data['atoms'][atom_ids[-1]]
+#         # return Only protein / Chain when not VHL
+#         if (last_atom_dict['chain'] == 'C') or (last_atom_dict['chain'] == 'H'):
+#             prot = 'Protein: ', chain_dict[str(last_atom_dict['chain'])],
+#             phr1 = 'Click somewhere on the VHL protein structure to select an amino acid.'
+#             return html.Div([html.Br(), html.Div(prot), html.Br(), html.Div(phr1), html.Br()])
+#
+#     aa_name = 'Reference amino acid: ', last_atom_dict['residue_name'], \
+#         ', position: ', str(last_atom_dict['residue_index'])
+#     subset_df = df.loc[(df['protPos'] == last_atom_dict['residue_index']) &
+#                        (~df['average_fs_missense_at_aa_rna'].isna())]
+#     return print_var_score_for_selected_residue(subset_df, aa_name)
 
 
 # Run app
