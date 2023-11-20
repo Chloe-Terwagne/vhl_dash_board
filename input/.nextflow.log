@@ -1,0 +1,14 @@
+Nov-16 09:48:16.660 [main] DEBUG nextflow.cli.Launcher - $> nextflow run peg_design_workflow.nf -params-file extra_minimal_vhl_params.json
+Nov-16 09:48:16.694 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 23.04.3
+Nov-16 09:48:16.707 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/Users/terwagc/.nextflow/plugins; core-plugins: nf-amazon@1.16.2,nf-azure@1.0.1,nf-codecommit@0.1.4,nf-console@1.0.5,nf-ga4gh@1.0.5,nf-google@1.7.3,nf-tower@1.5.12,nf-wave@0.8.4
+Nov-16 09:48:16.713 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Nov-16 09:48:16.714 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Nov-16 09:48:16.715 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Nov-16 09:48:16.720 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Nov-16 09:48:16.728 [main] DEBUG nextflow.scm.ProviderConfig - Using SCM config path: /Users/terwagc/.nextflow/scm
+Nov-16 09:48:16.733 [main] DEBUG nextflow.cli.Launcher - Operation aborted
+nextflow.exception.AbortOperationException: Cannot find script file: peg_design_workflow.nf
+	at nextflow.cli.CmdRun.getScriptFile(CmdRun.groovy:462)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:314)
+	at nextflow.cli.Launcher.run(Launcher.groovy:494)
+	at nextflow.cli.Launcher.main(Launcher.groovy:653)
