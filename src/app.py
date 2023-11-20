@@ -15,8 +15,16 @@ import dash_bio as dashbio
 from dash_bio.utils import PdbParser
 from dash.development.base_component import Component, _explicitize_args
 import plotly.graph_objs as go
+import dash_auth
+VALID_USERNAME_PASSWORD_PAIRS = {
+    'vhl_viewer': 'fun456'
+}
+# Launch app------------------------------------------------------------------------------------------------
+app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY], suppress_callback_exceptions=True,
+           meta_tags=[{'name': 'viewport', 'content': 'width=device-width, initial-scale=1.0'}])
+auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
 
-
+server = app.server
 
 # FONT & COLOR  ---------------------------------------------------------------
 font_list = ["Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
@@ -285,10 +293,7 @@ links_content = dbc.Card(
            'overflow': 'hidden'}
 )
 
-# Launch app------------------------------------------------------------------------------------------------
-app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY], suppress_callback_exceptions=True,
-           meta_tags=[{'name': 'viewport', 'content': 'width=device-width, initial-scale=1.0'}])
-server = app.server
+
 
 # Build your components------------------------------------------------------------------------------------------------
 # 3D parsing & styling
@@ -312,7 +317,7 @@ var_table = dash_table.DataTable(data=[], columns=[], style_table={'overflowX': 
                                      'border': '1px solid white'},  # Border color
                                  )
 overview_display = dcc.RadioItems(options=["Function score", "Variants expanded by nucleotide type"],
-                                  value='Function score', labelClassName="custom-text p-3",
+                                  value='Function score', labelClassName="custom-text p-3", labelStyle={'display': 'inline-block'},
                                   style={"margin-right": "0px!important", 'padding': '0px!important'})
 overview_dropdown = dcc.Dropdown(options=['clinvar_simple', 'consequence', "tier_class", 'Cancer_type_single'],
                                  placeholder="Select color category", value='clinvar_simple', clearable=False, className='my-custom-dropdown')
@@ -341,8 +346,8 @@ mol_viewer_colorbar = dcc.Graph(figure=color_bar_structure(),  # which return fi
 pdb_selector_drop = dcc.Checklist(id='pdb-selector', options=[{'label': 'Add ELOC and HIF 1A', 'value': 'VHL_H_C'}],
                                   labelClassName="custom-text p-3",
                                   style={'position': 'relative', "bottom": "-103px", "margin": "0px", "padding": "0px"})
-vizua_type_3d = dcc.RadioItems(id='vizua_type_3d',options={'sphere': 'Sphere', 'cartoon': 'Cartoon','stick': 'Stick'},
-                               value='sphere', labelClassName="custom-text p-3",
+vizua_type_3d = dcc.RadioItems(id='vizua_type_3d', options={'sphere': 'Sphere', 'cartoon': 'Cartoon','stick': 'Stick'},
+                               value='sphere', labelClassName="custom-text p-3", inline=True,
                                style={'position': 'relative', "bottom": "-50px", "margin": "0px", "padding": "0px"})
 
 # Customize Layout--------------------------------------------------------------------------------------------
@@ -834,4 +839,4 @@ def show_selected_residue(atom_ids, selected_pdb_file):
 
 # Run app
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
