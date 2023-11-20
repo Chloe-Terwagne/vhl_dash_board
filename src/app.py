@@ -187,9 +187,9 @@ def variant_first_search_dropdown(list_var, df):
 
 def get_structure_file(selected_pdb_file):
     if selected_pdb_file == ['VHL_H_C']:
-        selected_pdb_file = '1LM8_vch_isolated.pdb'
+        selected_pdb_file = '1LM8_vch_isolated.pdb?raw=true'
     else:
-        selected_pdb_file = '1LM8_vhl_isolated.pdb'
+        selected_pdb_file = '1LM8_vhl_isolated.pdb?raw=true'
 
     parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/' + selected_pdb_file)
     parser.mol3d_data()
@@ -229,7 +229,7 @@ def print_var_score_for_selected_residue(df, aa_name):
 
 # MAIN ---------------------------------------------------------------------------------------------------------------
 # data
-df = pd.read_csv("https://github.com/Chloe-Terwagne/board_materials/blob/main/input/vhl_preprocess_df.csv")
+df = pd.read_csv("https://github.com/Chloe-Terwagne/board_materials/blob/main/input/vhl_preprocess_df.csv?raw=true")
 exon_dict = {'exon 1b': [10141958, 10142087], 'exon 1a': [10142075, 10142202], 'exon 1p': [10142743, 10142876],
              'exon 2': [10146499, 10146644], 'exon 3a': [10149760, 10149887], 'exon 3b': [10149868, 10150002]}
 # Get text
@@ -298,7 +298,7 @@ links_content = dbc.Card(
 
 # Build your components------------------------------------------------------------------------------------------------
 # 3D parsing & styling
-parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/1LM8_vhl_isolated.pdb')
+parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/1LM8_vhl_isolated.pdb?raw=true')
 v_data = parser.mol3d_data()
 styles = create_style_3d(
     df, 'average_fs_missense_at_aa_rna', v_data['atoms'], visualization_type='cartoon', color_element='residue_score')
