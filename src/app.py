@@ -202,8 +202,7 @@ def get_structure_file(selected_pdb_file):
         selected_pdb_file = '1LM8_vbch_isolated.pdb?raw=true'
     else:
         selected_pdb_file = '1LM8_vhl_isolated.pdb?raw=true'
-
-    parser = PdbParser('input/3d_structure/' + selected_pdb_file)
+    parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/' + selected_pdb_file)
     parser.mol3d_data()
     return parser.mol3d_data()
 
