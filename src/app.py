@@ -258,6 +258,29 @@ github_link = html.Div([
     'border': 'solid 2px white',
 })
 
+twitter_link = html.Div([
+    html.A(
+        id='twitter-link',
+        children=['Follow the lab'],
+        href="https://twitter.com/TheGenomeLab",
+        style={'color': yel, 'border': yel, "text-decoration": 'none'},
+        target="_blank"
+    ),
+    html.Img(src='https://github.com/Chloe-Terwagne/board_materials/blob/main/Twitter-logo-on-transparent-background-PNG.png?raw=true',
+             style={'height': '50px', 'margin-left': '10px'},
+             ),
+], style={
+    'display': 'flex',
+    'align-items': 'center',
+    'justify-content': 'flex-start',
+    'padding': '20px',
+    'background': 'black',
+    'color': 'white',
+    'height': '80px',
+    'width': 'auto',
+    'border': 'solid 2px white',
+})
+
 links_content = dbc.Card(
     [html.Div(
         dbc.CardImg(
@@ -274,6 +297,10 @@ links_content = dbc.Card(
                     html.Div([
                         github_link
                     ], style={'display': 'flex', 'flex-direction': 'row', 'justify-content': 'flex-start'}),
+                    html.Div([
+                        twitter_link
+                    ], style={'display': 'flex', 'flex-direction': 'row', 'justify-content': 'flex-start'}),
+
                     html.Div([
                         # html.H4("Quick Resources", className="app-controls-block",
                         #         style={"font-family": "Garamond", 'margin-top': '10px', 'margin-bottom': '20px',
