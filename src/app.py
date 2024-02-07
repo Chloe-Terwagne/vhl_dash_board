@@ -29,6 +29,7 @@ auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
 server = app.server
 
 
+
 # FONT & COLOR  ---------------------------------------------------------------
 font_list = ["Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
              "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman"]
@@ -39,12 +40,13 @@ yellow = 'rgb(246, 190, 0)'
 yel = "rgb(214,210,196)"
 yel_exon = "rgba(214,210,196,0.1)"
 dark_gray = 'rgba(41,41,41,1)'  # background
+very_dark_gray = 'rgba(33,33,33,1)'  # very dark
 dark_gray_transp = 'rgba(41,41,41,0.85)'
 transparent = 'rgba(0,0,0,0) '
 
 # Create color palette for conseq, clinvar, tier class and cbio
 dict_cons_colors = {"Stop gained": "#e83677", "Canonical splice": "#f7a83e", "Intronic": "#8acdef",
-                    "Non synonymous": "#64bb97", "Splice site": "#243672", "Synonymous": "#4e77bb",
+                    "Missense": "#64bb97", "Splice site": "#243672", "Synonymous": "#4e77bb",
                     "Stop lost": "#964594",
                     "REGULATORY": "#B5A695", "5PRIME_UTR": "#B5A695", "3' UTR": "#d091bf", "REF": "#000000"}
 dict_clin_colors = {"Absent ": "#979090", "Benign": "#0433FF",
@@ -59,7 +61,7 @@ dict_tier_class_green_red = {"Neutral": 'rgb(143,153,62)', "Intermediate": "#d7d
                              'LOF1': 'rgb(147,39,44)'}
 dict_tier_class_c_blind_friendly = {"Neutral": 'rgb(143,153,62)', "Intermediate": '#e7f7d5', 'LOF2': '#d091bb',
                                     'LOF1': 'rgb(80, 7, 120)'}
-CUSTOM_CAT_ORDER = ["Neutral", "Intermediate", 'LOF2', 'LOF1'] + ['Synonymous', 'Non synonymous', "Intronic",
+CUSTOM_CAT_ORDER = ["Neutral", "Intermediate", 'LOF2', 'LOF1'] + ['Synonymous', 'Missense', "Intronic",
                                                                   "3' UTR", "Splice site", "Missense",
                                                                   "Canonical splice", "Stop lost", "Stop gained"] + [
                        "NA", "Absent ", "Benign", "Likely benign", "Uncertain significance",
@@ -85,18 +87,17 @@ pd.set_option('display.width', 900)
 pd.set_option('display.max_columns', 350)
 pd.set_option("display.max_rows", None)
 
+
 # hover display
 # define hover for all
-hover_columns = ['variant_id', 'cHGVS', 'function_score_final', 'delta_rna', 'tier_class', 'clinvar_simple',
-                 'consequence', 'sge_region']
+hover_columns = ['variant_id', 'cHGVS', 'pHGVS', 'consequence','function_score_final', 'tier_class']
 hover_text = ["<b>%{customdata[0]}</b>",
               "cHGVS: %{customdata[1]}",
-              "SGE function score: %{customdata[2]:.2f}",
-              "Delta RNA score: %{customdata[3]:.2f}",
-              "SGE function class: %{customdata[4]}",
-              "Clinvar classication: %{customdata[5]}",
-              "Consequence: %{customdata[6]}",
-              "SGE region: %{customdata[7]}"]
+              "pHGVS: %{customdata[2]}",
+              "Consequence: %{customdata[3]}",
+              "SGE function score: %{customdata[4]:.2f}",
+              "SGE function class: %{customdata[5]}"]
+
 
 # FUNCTION & CLASS ----------------------------------------------------------------------------------------------------
 
@@ -160,8 +161,8 @@ def color_bar_structure():
             y=0.5,
             x=-2,
             borderwidth=2,
-            bordercolor = yel,
-            tickcolor= yel,
+            bordercolor=yel,
+            tickcolor=yel,
             tickvals=[df['average_fs_missense_at_aa_rna'].max(), df['average_fs_missense_at_aa_rna'].min()],
             tickwidth=2,
             tickmode='array',
@@ -174,26 +175,35 @@ def color_bar_structure():
 
 
 def variant_first_search_dropdown(list_var, df):
+    print('list_var', list_var)
     # variant to have first in the dropdown
     mask = df['cHGVS'].isin(list_var)
     df_display_first = df[mask]
+
+    # Set the 'cHGVS' column as the index
+    df_display_first.set_index('cHGVS', inplace=True)
+
+    # Reindex the DataFrame based on the desired order in list_var_to_display_first
+    df_display_first = df_display_first.reindex(list_var_to_display_first)
+
+    # Reset the index to restore the original DataFrame structure
+    df_display_first.reset_index(inplace=True)
     df_remaining = df[~mask]
-    dict_all_var_key = [{'label': f'{row["cHGVS"]}', 'value': row['variant_id']} for index, row in
+    list_all_var_key = [{'label': f'{row["cHGVS"]}', 'value': row['variant_id']} for index, row in
                         df_display_first.iterrows()] + \
                        [{'label': f'{row["cHGVS"]}', 'value': row['variant_id']} for index, row in
-                        df_remaining.iterrows()] + \
-                       [{'label': f'{row["pHGVS"]}', 'value': row['variant_id']} for index, row in df.iterrows()] + \
-                       [{'label': str(variant), 'value': variant} for variant in df['variant_id']]
-    return dict_all_var_key
+                        df_remaining.iterrows()]
+
+    return list_all_var_key
 
 
 def get_structure_file(selected_pdb_file):
-    if selected_pdb_file == ['VHL_H_C']:
-        selected_pdb_file = '1LM8_vch_isolated.pdb?raw=true'
+    if selected_pdb_file == ['VHL_B_H_C']:
+        selected_pdb_file = '1LM8_vbch_isolated.pdb?raw=true'
     else:
         selected_pdb_file = '1LM8_vhl_isolated.pdb?raw=true'
 
-    parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/' + selected_pdb_file)
+    parser = PdbParser('input/3d_structure/' + selected_pdb_file)
     parser.mol3d_data()
     return parser.mol3d_data()
 
@@ -205,33 +215,54 @@ def print_var_score_for_selected_residue(df, aa_name):
     if len(list(df['variant_id'])) < 1:
         text = html.Div(
             [html.Br(), html.Div(aa_name),
-             html.Div("No missense variants with RNA >= -2 correspond to this residue"), html.Br()])
+             html.Div("No missense variants with RNA score ≥ -2 correspond to this residue"), html.Br()])
         return text
 
     else:
         if len(list(df['variant_id'])) == 1:
             variant_nb = 'This residue has ' + str(
-                len(list(df['variant_id']))) + ' missense variant with RNA >= -2.' + '\n'
+                len(list(df['variant_id']))) + ' missense variant with RNA score ≥ -2.' + '\n'
         if len(list(df['variant_id'])) > 1:
             variant_nb = 'This residue has ' + str(len(list(df[
-                                                                'variant_id']))) + ' missense variants with RNA >= -2 with an average function score of ' + str(
-                round(list(df['average_fs_missense_at_aa_rna'])[0], 2)) + '\n'
-        variant_list = []
-        for i in range(len(list(df['variant_id']))):
-            variant_list.append(str(list(df['cHGVS'])[i]) + ', ' + ' SGE function score:\t' + str(
-                round(list(df['function_score_final'])[i], 2)) + ', new amino acid: ' + str(
-                list(df['nAA'])[i]))
+                                                                'variant_id']))) + ' missense variants with RNA score ≥ -2 with an average function score of ' + str(
+                round(list(df['average_fs_missense_at_aa_rna'])[0], 2)) + '.\n'
 
-        text = html.Div([html.Br(), html.Div(aa_name),
-                         html.Div(variant_nb)] +
-                        [html.Div(var) for var in variant_list] +
-                        [html.Br()])
+        variant_table = html.Table(
+            # Header
+            [html.Tr([
+                html.Th('Variant', style={'padding': '25px'}),
+                html.Th('cHGVS', style={'padding': '25px'}),
+                html.Th('pHGVS', style={'padding': '25px'}),
+                html.Th('SGE Function Score', style={'padding': '25px'})
+            ])] +
+            # Rows
+            [html.Tr([
+                html.Td('Variant ' + str(i + 1), style={'padding-top': '6px', 'padding-right':'25px','padding-left':'25px' }),
+                html.Td(df['cHGVS'].iloc[i], style={'padding-top': '6px', 'padding-right':'25px','padding-left':'25px' }),
+                html.Td(df['pHGVS'].iloc[i], style={'padding-top': '6px', 'padding-right':'25px','padding-left':'25px' }),
+                html.Td(round(df['function_score_final'].iloc[i], 2), style={'padding-top': '6px', 'padding-right':'25px','padding-left':'25px' })
+            ]) for i in range(len(df))],
+        # here introduce padding btween last row and border
+            # Introduce padding between last row and border
+            style={'borderCollapse': 'collapse', 'border': '1px solid ' + light_gray})
+        text = html.Div([
+            html.Br(),
+            html.Div(aa_name),
+            html.Div(variant_nb),
+            html.Br(),
+            html.Br(),
+            variant_table,
+        ])
+
         return text
 
 
 # MAIN ---------------------------------------------------------------------------------------------------------------
 # data
 df = pd.read_csv("https://github.com/Chloe-Terwagne/board_materials/blob/main/input/vhl_preprocess_df.csv?raw=true")
+df['pHGVS'] = df['pHGVS'].fillna('N/A')
+df['consequence'] = df['consequence'].replace('Non synonymous', 'Missense')
+print(df.consequence.value_counts())
 exon_dict = {'exon 1b': [10141958, 10142087], 'exon 1a': [10142075, 10142202], 'exon 1p': [10142743, 10142876],
              'exon 2': [10146499, 10146644], 'exon 3a': [10149760, 10149887], 'exon 3b': [10149868, 10150002]}
 # Get text
@@ -240,45 +271,22 @@ github_link = html.Div([
         id='gh-link',
         children=['View on GitHub'],
         href="https://github.com/FrancisCrickInstitute/vhl_dash_board",
-        style={'color': yel, 'border': yel, "text-decoration": 'none'},
+        style={'margin-left': '20px', 'color': 'white', 'border': 'white', "text-decoration": 'none'},
         target="_blank"
     ),
     html.Img(src='https://github.com/Chloe-Terwagne/board_materials/blob/main/GitHub-Mark-64px.png?raw=true',
-             style={'height': '50px', 'margin-left': '10px'},
+             style={'height': '30px', 'margin-left': '10px', 'margin-right': '20px'},
              ),
 ], style={
     'display': 'flex',
     'align-items': 'center',
     'justify-content': 'flex-start',
-    'padding': '20px',
-    'background': 'black',
+    'padding': '15px',
+    'background': very_dark_gray,
     'color': 'white',
-    'height': '80px',
+    'height': '50px',
     'width': 'auto',
-    'border': 'solid 2px white',
-})
-
-twitter_link = html.Div([
-    html.A(
-        id='twitter-link',
-        children=['Follow the lab'],
-        href="https://twitter.com/TheGenomeLab",
-        style={'color': yel, 'border': yel, "text-decoration": 'none'},
-        target="_blank"
-    ),
-    html.Img(src='https://github.com/Chloe-Terwagne/board_materials/blob/main/Twitter-logo-on-transparent-background-PNG.png?raw=true',
-             style={'height': '50px', 'margin-left': '10px'},
-             ),
-], style={
-    'display': 'flex',
-    'align-items': 'center',
-    'justify-content': 'flex-start',
-    'padding': '20px',
-    'background': 'black',
-    'color': 'white',
-    'height': '80px',
-    'width': 'auto',
-    'border': 'solid 2px white',
+    'border': 'solid 0.5px white',
 })
 
 links_content = dbc.Card(
@@ -291,39 +299,35 @@ links_content = dbc.Card(
         style={'position': 'absolute', 'top': '-20px', 'right': '-20px'}  # Positioning the image at the top right
     ),
 
-    dbc.CardBody(
+        dbc.CardBody(
             [
                 html.Div([
                     html.Div([
                         github_link
-                    ], style={'display': 'flex', 'flex-direction': 'row', 'justify-content': 'flex-start'}),
-                    html.Div([
-                        twitter_link
-                    ], style={'display': 'flex', 'flex-direction': 'row', 'justify-content': 'flex-start'}),
-
+                    ], style={'display': 'flex', 'flex-direction': 'row', 'justify-content': 'flex-start', 'margin-left': '300px'}),
                     html.Div([
                         # html.H4("Quick Resources", className="app-controls-block",
                         #         style={"font-family": "Garamond", 'margin-top': '10px', 'margin-bottom': '20px',
                         #                'font-size': '18pt'}),
                         dbc.CardLink(["M.Buckley", html.Em(" et al."), ', 2023 preprint'],
-                                     href="https://www.biorxiv.org/content/10.1101/2023.06.10.542698v1",
-                                     target="_blank", className='custom-link'),
+                                     href="https://doi.org/10.1101/2023.06.10.542698",
+                                     target="_blank", className='custom-link', style={'text-decoration': 'none'}),
                     ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-start'}),
                     html.Div([
-                        dbc.CardLink("Genome Function Lab", href="https://www.crick.ac.uk/research/labs/greg-findlay/",
-                                     target="_blank", className='custom-link'),
-                    ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-start', 'margin-right':'300px'})
+                        dbc.CardLink("Genome Function Lab website", href="https://www.crick.ac.uk/research/labs/greg-findlay/",
+                                     target="_blank", className='custom-link', style={'text-decoration': 'none'}),
+                    ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-start',
+                              'margin-right': '300px'})
                 ], style={'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center'}),
                 html.Br(),
             ]
         )
     ],
-    style={"height": "120px", 'background-color': transparent, 'border': 'solid 2px white',
+    style={"height": "100px", 'background-color': transparent, 'border': 'solid 2px',
            'border-radius': '20px',
+           'border-color': light_gray,
            'overflow': 'hidden'}
 )
-
-
 
 # Build your components------------------------------------------------------------------------------------------------
 # 3D parsing & styling
@@ -332,52 +336,71 @@ v_data = parser.mol3d_data()
 styles = create_style_3d(
     df, 'average_fs_missense_at_aa_rna', v_data['atoms'], visualization_type='cartoon', color_element='residue_score')
 vhl_3D = dashbio.Molecule3dViewer(id='dashbio-default-molecule3d', modelData=v_data, styles=styles, backgroundOpacity=0,
-                                  selectionType='residue', backgroundColor="black", height=600, width=735) #,width=735)  # , zoom=dict(factor=1.9,animationDuration=30000, fixedPath=False))
+                                  selectionType='residue', backgroundColor="black", height=600,
+                                  width=735)  # ,width=735)  # , zoom=dict(factor=1.9,animationDuration=30000, fixedPath=False))
 
 overview_title = dcc.Markdown(children='', style=dict(font_family=font_list[idx_font], font_color=yel))
-list_var_to_display_first = ["c.256C>A", "c.111G>T", "c.264G>C"]
+list_var_to_display_first = ['c.500G>A','c.233A>G','c.292T>C','c.473T>C',
+                             'c.351G>T','c.194C>G','c.484T>C','c.334T>A','c.351G>T']
+
 variant_highlight_dropd = dcc.Dropdown(options=variant_first_search_dropdown(list_var_to_display_first, df), multi=True,
-    placeholder="Select or type variant(s) to highlight", className='my-custom-dropdown',  style={'z-index': '2'})
+                                       placeholder="Select or type variant(s) to highlight",
+                                       className='my-custom-dropdown', style={'z-index': '2'})
 var_table = dash_table.DataTable(data=[], columns=[], style_table={'overflowX': 'auto', 'backgroundColor': dark_gray},
+                                 cell_selectable=False,
                                  # Background color
                                  style_data={'color': yel},  # Font color for data cells
-                                 style_header={'backgroundColor': 'black', 'color': yellow},  # Header style
+                                 style_header={'backgroundColor': very_dark_gray, 'color': yellow},  # Header style
                                  style_cell={
                                      'backgroundColor': dark_gray_transp,  # Background color for cells
                                      'border': '1px solid white'},  # Border color
                                  )
-overview_display = dcc.RadioItems(options=["Function score", "Variants expanded by nucleotide type"],
-                                  value='Function score', labelClassName="custom-text p-3", labelStyle={'display': 'inline-block'},
+overview_display = dcc.RadioItems(options=["SGE Function Score", "Variants expanded by nucleotide type"],
+                                  value='SGE Function Score', labelClassName="custom-text p-3",
                                   style={"margin-right": "0px!important", 'padding': '0px!important'})
-overview_dropdown = dcc.Dropdown(options=['clinvar_simple', 'consequence', "tier_class", 'Cancer_type_single'],
-                                 placeholder="Select color category", value='clinvar_simple', clearable=False, className='my-custom-dropdown')
+overview_dropdown = dcc.Dropdown(options=[
+    {'label': 'ClinVar', 'value': 'clinvar_simple'},
+    {'label': 'Consequence', 'value': 'consequence'},
+    {'label': 'Function Class', 'value': 'tier_class'},
+    {'label': 'Cancer Type', 'value': 'Cancer_type_single'}
+],
+    placeholder="Select color category", value='consequence',
+    clearable=False, className='my-custom-dropdown')
 at_scale = BooleanSwitch(on=False, size=25, label=dict(label="Genomic position at scale", style=dict(font_color=yel)),
-                         color=yellow, labelPosition="left",  style={"margin-right": "0px", "margin-top": "0px",  "margin-bottom": "-80px", 'padding': '0px'})
+                         color=yellow, labelPosition="left",
+                         style={"margin-right": "0px", "margin-top": "0px", "margin-bottom": "-80px", 'padding': '0px'})
 overview_graph = dcc.Graph(figure={}, config={'staticPlot': False, 'scrollZoom': False, 'doubleClick': 'reset',
                                               'showTips': True, 'displayModeBar': 'hover', 'displaylogo': False,
                                               'modeBarButtonsToRemove': ['lasso2d', 'zoomIn2d', 'zoomOut2d',
-                                                                         'autoScale2d'] }, style={"margin-top": "-45px", "margin-bottom": "-75px",'padding': '0px'}, selectedData=None)
+                                                                         'autoScale2d']},
+                           style={"margin-top": "-45px", "margin-bottom": "-75px", 'padding': '0px'}, selectedData=None)
 color_blind_option = BooleanSwitch(on=False, size=25,
                                    label=dict(label="Color blind friendly", style=dict(font_color=yel)),
                                    color='rgb(80, 7, 120)', labelPosition="left")
 two_d_graph = dcc.Graph(figure={},
                         config={'staticPlot': False, 'scrollZoom': False, 'doubleClick': 'reset', 'showTips': True,
-                                'displayModeBar':  'hover', 'displaylogo': False,
-                                              'modeBarButtonsToRemove': ['lasso2d', 'select2d',
-                                                                         'autoScale2d'], 'watermark': False})
+                                'displayModeBar': 'hover', 'displaylogo': False,
+                                'modeBarButtonsToRemove': ['lasso2d', 'select2d',
+                                                           'autoScale2d'], 'watermark': False})
 two_d_title = dcc.Markdown(children='all variant')
-x_dropdown = dcc.Dropdown(options=['VARITY_R', 'REVEL', 'CADD.phred', 'max_spliceAI'],
+y_dropdown = dcc.Dropdown(options=[
+                          {'label': 'CADD phred', 'value': 'CADD.phred'},
+                          {'label': 'VARITY', 'value': 'VARITY_R'},
+                          {'label': 'REVEL', 'value': 'REVEL'},
+                          {'label': 'SpliceAI', 'value': 'max_spliceAI'}],
                           value='CADD.phred', clearable=False, className='my-custom-dropdown')
-y_dropdown = dcc.Dropdown(options=['function_score_final', 'delta_rna'],
-                          value='delta_rna', clearable=False, className='my-custom-dropdown')
+x_dropdown = dcc.Dropdown(options=[{'label': 'SGE Function Score', 'value': 'function_score_final'},
+                                   {'label': 'RNA score', 'value': 'rna_score'}],
+                          value='function_score_final', clearable=False, className='my-custom-dropdown')
 mol_viewer_colorbar = dcc.Graph(figure=color_bar_structure(),  # which return fig_color_bar,
                                 config={'staticPlot': True, 'scrollZoom': False, 'showTips': False,
-                                        'displayModeBar': False, 'watermark': False},style={"margin-top":'-180px'})
-pdb_selector_drop = dcc.Checklist(id='pdb-selector', options=[{'label': 'Add ELOC and HIF 1A', 'value': 'VHL_H_C'}],
+                                        'displayModeBar': False, 'watermark': False}, style={"margin-top": '-180px'})
+pdb_selector_drop = dcc.Checklist(id='pdb-selector',
+                                  options=[{'label': 'Add ELOC, ELOB and HIF 1A', 'value': 'VHL_B_H_C'}],
                                   labelClassName="custom-text p-3",
                                   style={'position': 'relative', "bottom": "-103px", "margin": "0px", "padding": "0px"})
-vizua_type_3d = dcc.RadioItems(id='vizua_type_3d', options={'sphere': 'Sphere', 'cartoon': 'Cartoon','stick': 'Stick'},
-                               value='sphere', labelClassName="custom-text p-3", inline=True,
+vizua_type_3d = dcc.RadioItems(id='vizua_type_3d', options={'sphere': 'Sphere', 'cartoon': 'Cartoon', 'stick': 'Stick'},
+                               value='sphere', labelClassName="custom-text p-3",
                                style={'position': 'relative', "bottom": "-50px", "margin": "0px", "padding": "0px"})
 
 # Customize Layout--------------------------------------------------------------------------------------------
@@ -386,13 +409,13 @@ app.layout = \
     dbc.Container([
         dbc.Row([html.Br()]),
         dbc.Row([
-            dbc.Col(html.H1("Variant effect in VHL gene", className='custom-h1'), width={'size': 7, 'offset': 2}, ),
+            dbc.Col(html.H1("Saturation Genome Editing of VHL", className='custom-h1'), width={'size': 7, 'offset': 2}, ),
             dbc.Col([
                 dbc.Row(color_blind_option, className="my-custom-switch")], width={'size': 2}, align='right')
         ], justify='between'),
         dbc.Row([html.Br()]),
         dbc.Row([
-            dbc.Col([variant_highlight_dropd],width={'size': 4}),
+            dbc.Col([variant_highlight_dropd], width={'size': 4}),
             dbc.Col([overview_dropdown], width={'size': 2}),
         ], justify='between'),
         dbc.Row([var_table]),
@@ -418,18 +441,20 @@ app.layout = \
                             [
                                 dbc.Col(
                                     html.Div([
-                                        html.H5("Select a x-axis predictor score"),
+                                        html.H5("Select a x-axis experimental score"),
                                         x_dropdown
-                                    ], className='my-custom-title', style={'background-color': dark_gray, 'padding': '20px 20px 20px 20px',
-                                              'margin': '0'}),
+                                    ], className='my-custom-title',
+                                        style={'background-color': dark_gray, 'padding': '20px 20px 20px 20px',
+                                               'margin': '0'}),
                                     md=6  # 6 columns for x_dropdown
                                 ),
                                 dbc.Col(
                                     html.Div([
-                                        html.H5('Select a y-axis experimental score'),
+                                        html.H5('Select a y-axis predictor score'),
                                         y_dropdown
-                                    ], className='my-custom-title', style={'background-color': dark_gray, 'padding': '20px 20px 20px 20px',
-                                              'margin-left': '-30px'}),
+                                    ], className='my-custom-title',
+                                        style={'background-color': dark_gray, 'padding': '20px 20px 20px 20px',
+                                               'margin-left': '-30px'}),
                                     md=6  # 6 columns for y_dropdown
                                 ),
                             ],
@@ -444,27 +469,30 @@ app.layout = \
                     [
                         dbc.Row(vhl_3D),  # 3D protein
                         dbc.Row(dbc.Col([mol_viewer_colorbar], md=6)),
-                        dbc.Row(dbc.Col(html.H1("Averaged missense variant function score per residue mapped on VHL structure", className='custom-h1', style={
-                                                        'font-size': '18pt', 'text-align': 'left', "margin-left": '45px',"margin-top":'-80px','position': 'relative'}), width={'size': 9, 'offset': 2})),
+                        dbc.Row(dbc.Col(
+                            html.H1("Averaged missense variant function score per residue mapped on VHL structure",
+                                    className='custom-h1', style={
+                                    'font-size': '18pt', 'text-align': 'left', "margin-left": '45px',
+                                    "margin-top": '-80px', 'position': 'relative'}), width={'size': 9, 'offset': 2})),
                         dbc.Row([
-                                dbc.Col(
-                                            [
-                                                html.Div(
-                                                    id='default-molecule3d-output',
-                                                    style={
-                                                        'background-color': dark_gray_transp,
-                                                        'padding': '15px',
-                                                        'padding-bottom': '102px',
-                                                        'position': 'relative',
-                                                         "margin-top":'0px',
-                                                        "margin-left": '2px',
-                                                        'z-index': '1'
-                                                    }
-                                                ),
-                                            ]
-                                        )
+                            dbc.Col(
+                                [
+                                    html.Div(
+                                        id='default-molecule3d-output',
+                                        style={
+                                            'background-color': dark_gray_transp,
+                                            'padding': '15px',
+                                            'padding-bottom': '102px',
+                                            'position': 'relative',
+                                            "margin-top": '0px',
+                                            "margin-left": '2px',
+                                            'z-index': '1'
+                                        }
+                                    ),
+                                ]
+                            )
 
-                            ],
+                        ],
                             className='custom-text_left',
                         ),
                     ],
@@ -472,8 +500,16 @@ app.layout = \
             ],
         ),
         dbc.Row(html.Br()),
-        dbc.Row(links_content)
-
+        dbc.Row(links_content),
+        dbc.Row([
+            dbc.Col(
+                html.P(html.Small([
+                    "Coded with care by ",
+                    html.A("Chloé Terwagne", href="https://twitter.com/ChloeTerwagne")
+                ])),
+                style={'text-align': 'right'}
+            )
+        ]),
     ], fluid=True)
 
 
@@ -498,18 +534,11 @@ def update_datatable(selected_variants):
         {'name': 'Variant', 'id': 'variant_id'},
         {'name': 'cHGVS', 'id': 'cHGVS'},
         {'name': 'pHGVS', 'id': 'pHGVS'},
-        {'name': 'SGE Region', 'id': 'sge_region'},
-        {'name': 'Delta RNA', 'id': 'delta_rna', 'type': 'numeric', 'format': {'specifier': '.2f'}},
-        {'name': 'Function Class', 'id': 'tier_class'},
-        {'name': 'Function score', 'id': 'function_score_final', 'type': 'numeric', 'format': {'specifier': '.2f'}},
-        {'name': 'RNA score', 'id': 'rna_score', 'type': 'numeric', 'format': {'specifier': '.2f'}},
-        {'name': 'average miss FS >=RNA', 'id': 'average_fs_missense_at_aa_rna', 'type': 'numeric',
-         'format': {'specifier': '.2f'}},
         {'name': 'Consequence', 'id': 'consequence'},
-        {'name': 'Clinvar', 'id': 'clinvar_simple'},
-        {'name': 'REVEL', 'id': 'REVEL', 'type': 'numeric', 'format': {'specifier': '.2f'}},
-        {'name': 'CADD', 'id': 'CADD.phred', 'type': 'numeric', 'format': {'specifier': '.2f'}},
-        {'name': 'SpliceAI', 'id': 'max_spliceAI', 'type': 'numeric', 'format': {'specifier': '.2f'}},
+        {'name': 'Function Class', 'id': 'tier_class'},
+        {'name': 'Function Score', 'id': 'function_score_final', 'type': 'numeric', 'format': {'specifier': '.2f'}},
+        {'name': 'RNA score', 'id': 'rna_score', 'type': 'numeric', 'format': {'specifier': '.2f'}},
+        {'name': 'ClinVar', 'id': 'clinvar_simple'}
     ]
     return data, col
 
@@ -544,9 +573,9 @@ def update_overview_graph(column_name, y_axis_nucleotide, color_blind, at_scale,
     limit = (-3.745898895, 0.590402626)
     y_axis = 'function_score_final'
     yaxis_dict = dict(showgrid=True, gridcolor=yel_exon, visible=True, zeroline=False, linecolor=None, linewidth=1,
-                      title='Function score')
+                      title='Function Score')
     xaxis_dict = dict(showgrid=False, visible=True, zeroline=False, linecolor=None, linewidth=1, showticklabels=False,
-                      title="Genomic position (not at scale)")
+                      title="Unscaled Genomic Position")
 
     if y_axis_nucleotide == "Variants expanded by nucleotide type":
         marker_symb, y_axis, height_grph = "square", 'alt_pos', 340
@@ -584,7 +613,7 @@ def update_overview_graph(column_name, y_axis_nucleotide, color_blind, at_scale,
             mode='markers',
             customdata=subset_var_highlight_df[hover_columns],
             marker=dict(size=mark_size + 2, symbol=marker_symb, line=dict(width=marker_line_width, color=yellow),
-                color=[colors[key] for key in subset_var_highlight_df[column_name]]),
+                        color=[colors[key] for key in subset_var_highlight_df[column_name]]),
             hovertemplate="<br>".join(hover_text),
             name="Highlighted variant",
             opacity=1,
@@ -621,7 +650,7 @@ def update_overview_graph(column_name, y_axis_nucleotide, color_blind, at_scale,
             )
             fig.add_shape(intron_shape)
 
-    if y_axis_nucleotide == "Function score":
+    if y_axis_nucleotide == "SGE Function Score":
         # add zeroline
         fig.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor=yel_exon, ticks="outside",
                          tickcolor='rgb(255,255,255)')
@@ -649,6 +678,7 @@ def update_overview_graph(column_name, y_axis_nucleotide, color_blind, at_scale,
                       x0=start, y0=limit[0] - enlarge - 0.2, x1=end, y1=limit[1] + enlarge,
                       line=dict(color=transparent, width=2),
                       fillcolor=transparent, layer='below')
+    dict_label_leg = {'clinvar_simple': 'ClinVar', 'consequence': 'Consequence', 'tier_class': 'Function Class', 'Cancer_type_single': 'Cancer Type'}
 
     fig.update_layout(
         plot_bgcolor=transparent,
@@ -657,7 +687,7 @@ def update_overview_graph(column_name, y_axis_nucleotide, color_blind, at_scale,
         yaxis=yaxis_dict,
         font_family=font_list[idx_font],
         legend=dict(orientation='h', yanchor='top', y=1.2, xanchor='left', x=0,
-                    title="<b>" + column_name + ' annotation<b>', font_family=font_list[idx_font]),
+                    title="<b>" + dict_label_leg[column_name] + ' Annotation<b>', font_family=font_list[idx_font]),
         font_color=yel,
         modebar=dict(
             bgcolor=transparent,
@@ -766,10 +796,14 @@ def update_2d_graph(color_column, slct_data, x_col, y_col, highlight_var, color_
                 hovertemplate="<br>".join(hover_text),
                 name="Highlited variants")
             fig2.add_trace(highlight_trace)
+
+    dict_label_axis = {'CADD.phred': 'CADD phred', 'VARITY_R': 'VARITY', 'REVEL': 'REVEL', 'max_spliceAI': 'SpliceAI', 'function_score_final': 'SGE Function Score', 'rna_score': 'RNA score'}
+    dict_label_leg = {'clinvar_simple': 'ClinVar', 'consequence': 'Consequence', 'tier_class': 'Function Class', 'Cancer_type_single': 'Cancer Type'}
+
     # Make it looks cute
     fig2.update_layout(plot_bgcolor=dark_gray,
-                       xaxis_title=dict(text=x_col, font=dict(color=yel)),
-                       yaxis_title=dict(text=y_col, font=dict(color=yel)),
+                       xaxis_title=dict(text=dict_label_axis[x_col], font=dict(color=yel)),
+                       yaxis_title=dict(text=dict_label_axis[y_col], font=dict(color=yel)),
                        xaxis=black3dbg,
                        yaxis=black3dbg,
                        paper_bgcolor='rgb(41,41,41)',
@@ -782,7 +816,7 @@ def update_2d_graph(color_column, slct_data, x_col, y_col, highlight_var, color_
                        title_font_size=18,
                        showlegend=True,
                        height=650,
-                       legend=dict(orientation='v', yanchor='bottom', y=0, xanchor='left', x=0, title=color_column,
+                       legend=dict(orientation='v', yanchor='bottom', y=0, xanchor='left', x=0, title=dict_label_leg[color_column],
                                    font=dict(color=yel), bgcolor='rgba(41,41,41,0.65)'),
                        modebar=dict(
                            bgcolor=transparent,
@@ -855,8 +889,8 @@ def show_selected_residue(atom_ids, selected_pdb_file):
     else:
         last_atom_dict = data['atoms'][atom_ids[-1]]
         # return Only protein / Chain when not VHL
-        if (last_atom_dict['chain'] == 'C') or (last_atom_dict['chain'] == 'H'):
-            prot = 'Protein: ', chain_dict[str(last_atom_dict['chain'])],
+        if (last_atom_dict['chain'] == 'C') or (last_atom_dict['chain'] == 'H') or (last_atom_dict['chain'] == 'B'):
+            prot = 'Chain: ', chain_dict[str(last_atom_dict['chain'])],
             phr1 = 'Click somewhere on the VHL protein structure to select an amino acid.'
             return html.Div([html.Br(), html.Div(prot), html.Br(), html.Div(phr1), html.Br()])
 
