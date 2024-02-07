@@ -174,6 +174,10 @@ def create_style_3d(df, colname_score, atoms, visualization_type="stick", color_
             visualization_type='stick'
             atom_color = '#33FF33'
 
+        elif a["chain"] == "B":
+            visualization_type='cartoon'
+            atom_color = '#fcec03'
+
         elif a["chain"] == "C":
             visualization_type = 'cartoon'
             atom_color = "#CCFFFF"
