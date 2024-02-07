@@ -356,7 +356,7 @@ var_table = dash_table.DataTable(data=[], columns=[], style_table={'overflowX': 
                                      'border': '1px solid white'},  # Border color
                                  )
 overview_display = dcc.RadioItems(options=["SGE Function Score", "Variants expanded by nucleotide type"],
-                                  value='SGE Function Score', labelClassName="custom-text p-3",
+                                  value='SGE Function Score', labelClassName="custom-text p-3", labelStyle={'display': 'inline-block'},
                                   style={"margin-right": "0px!important", 'padding': '0px!important'})
 overview_dropdown = dcc.Dropdown(options=[
     {'label': 'ClinVar', 'value': 'clinvar_simple'},
@@ -400,7 +400,7 @@ pdb_selector_drop = dcc.Checklist(id='pdb-selector',
                                   labelClassName="custom-text p-3",
                                   style={'position': 'relative', "bottom": "-103px", "margin": "0px", "padding": "0px"})
 vizua_type_3d = dcc.RadioItems(id='vizua_type_3d', options={'sphere': 'Sphere', 'cartoon': 'Cartoon', 'stick': 'Stick'},
-                               value='sphere', labelClassName="custom-text p-3",
+                               value='sphere', labelClassName="custom-text p-3", labelStyle={'display': 'inline-block'},
                                style={'position': 'relative', "bottom": "-50px", "margin": "0px", "padding": "0px"})
 
 # Customize Layout--------------------------------------------------------------------------------------------
