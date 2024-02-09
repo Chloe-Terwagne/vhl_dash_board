@@ -1,7 +1,7 @@
 """
-    Project :  variants visualisation platform for VHL sge experiment
+    Project :  Visualisation platform of the VHL SGE experiment
     Name : Chloé Terwagne
-    date : 20 June 2023
+    Date : 20 June 2023
     Python version 3.9
 """
 # IMPORT ---------------------------------------------------------------
@@ -102,8 +102,6 @@ hover_text = ["<b>%{customdata[0]}</b>",
 # FUNCTION & CLASS ----------------------------------------------------------------------------------------------------
 
 # class BooleanSwitch(Component) copied from https://github.com/plotly/dash-daq/blob/master/dash_daq/BooleanSwitch.py
-
-
 class BooleanSwitch(Component):
     @_explicitize_args
     def __init__(self, id=Component.UNDEFINED, on=Component.UNDEFINED, color=Component.UNDEFINED,
@@ -305,10 +303,7 @@ links_content = dbc.Card(
                         github_link
                     ], style={'display': 'flex', 'flex-direction': 'row', 'justify-content': 'flex-start', 'margin-left': '300px'}),
                     html.Div([
-                        # html.H4("Quick Resources", className="app-controls-block",
-                        #         style={"font-family": "Garamond", 'margin-top': '10px', 'margin-bottom': '20px',
-                        #                'font-size': '18pt'}),
-                        dbc.CardLink(["M.Buckley", html.Em(" et al."), ', 2023 preprint'],
+                        dbc.CardLink(["M.Buckley", html.Em(" et al."), ', 2023'],
                                      href="https://doi.org/10.1101/2023.06.10.542698",
                                      target="_blank", className='custom-link', style={'text-decoration': 'none'}),
                     ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-start'}),
@@ -512,7 +507,7 @@ app.layout = \
     ], fluid=True)
 
 
-# Callback allows components to interact--------------------------------------------------------------------------------
+# Callback --------------------------------------------------------------------------------
 @app.callback(
     Output(var_table, 'data'),
     Output(var_table, 'columns'),
