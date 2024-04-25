@@ -193,8 +193,6 @@ def get_structure_file(selected_pdb_file):
         selected_pdb_file = '1LM8_vbch_isolated.pdb?raw=true'
     else:
         selected_pdb_file = '1LM8_vhl_isolated.pdb?raw=true'
-    #old dir
-    #parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/' + selected_pdb_file)
     parser = PdbParser('https://github.com/Chloe-Terwagne/vhl_dash_board/tree/main/src/assets/input/3d_structure/' + selected_pdb_file)
     parser.mol3d_data()
     return parser.mol3d_data()
@@ -220,22 +218,18 @@ def print_var_score_for_selected_residue(df, aa_name):
                 round(list(df['average_fs_missense_at_aa_rna'])[0], 2)) + '.\n'
 
         variant_table = html.Table(
-            # Header
             [html.Tr([
                 html.Th('Variant', style={'padding': '25px'}),
                 html.Th('cHGVS', style={'padding': '25px'}),
                 html.Th('pHGVS', style={'padding': '25px'}),
                 html.Th('SGE Function Score', style={'padding': '25px'})
             ])] +
-            # Rows
             [html.Tr([
                 html.Td('Variant ' + str(i + 1), style={'padding-top': '6px', 'padding-right':'25px','padding-left':'25px' }),
                 html.Td(df['cHGVS'].iloc[i], style={'padding-top': '6px', 'padding-right':'25px','padding-left':'25px' }),
                 html.Td(df['pHGVS'].iloc[i], style={'padding-top': '6px', 'padding-right':'25px','padding-left':'25px' }),
                 html.Td(round(df['function_score_final'].iloc[i], 2), style={'padding-top': '6px', 'padding-right':'25px','padding-left':'25px' })
             ]) for i in range(len(df))],
-        # here introduce padding btween last row and border
-            # Introduce padding between last row and border
             style={'borderCollapse': 'collapse', 'border': '1px solid ' + light_gray})
         text = html.Div([
             html.Br(),
@@ -251,8 +245,6 @@ def print_var_score_for_selected_residue(df, aa_name):
 
 # MAIN ---------------------------------------------------------------------------------------------------------------
 # data
-#old dir
-# df = pd.read_csv("https://github.com/Chloe-Terwagne/board_materials/blob/main/input/vhl_preprocess_df.csv?raw=true")
 df = pd.read_csv('https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/input/vhl_preprocess_df.csv?raw=true')
 df['pHGVS'] = df['pHGVS'].fillna('N/A')
 df['consequence'] = df['consequence'].replace('Non synonymous', 'Missense')
@@ -268,8 +260,6 @@ github_link = html.Div([
         style={'margin-left': '20px', 'color': 'white', 'border': 'white', "text-decoration": 'none'},
         target="_blank"
     ),
-    #old dir
-    #html.Img(src='https://github.com/Chloe-Terwagne/board_materials/blob/main/GitHub-Mark-64px.png?raw=true',
     html.Img(src='https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/GitHub-Mark-64px.png?raw=true',
 
                       style={'height': '30px', 'margin-left': '10px', 'margin-right': '20px'},
@@ -289,8 +279,6 @@ github_link = html.Div([
 links_content = dbc.Card(
     [html.Div(
         dbc.CardImg(
-            #old dir
-            #src="https://github.com/Chloe-Terwagne/board_materials/blob/main/CRICK_Logotype_white_RGB.png?raw=true",
             src="https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/CRICK_Logotype_white_RGB.png?raw=true",
             style={'width': '100px'},  # Set the specific width here
             top=True
@@ -327,8 +315,6 @@ links_content = dbc.Card(
 
 # Build your components------------------------------------------------------------------------------------------------
 # 3D parsing & styling
-#old dir
-#parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/1LM8_vhl_isolated.pdb?raw=true')
 parser = PdbParser('https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/input/3d_structure/1LM8_vhl_isolated.pdb?raw=true')
 
 v_data = parser.mol3d_data()
@@ -454,13 +440,12 @@ app.layout = \
                                     ], className='my-custom-title',
                                         style={'background-color': dark_gray, 'padding': '20px 20px 20px 20px',
                                                'margin-left': '-30px'}),
-                                    md=6  # 6 columns for y_dropdown
+                                    md=6
                                 ),
                             ],
-                            # style={'margin-bottom': '20px'}  # Adjust margin between dropdowns and plot
                         ),
                     ],
-                    md=6  # 12 columns for the entire width of the plot and dropdowns in Graph 2
+                    md=6
                 ),
 
                 # Graph 3
@@ -582,9 +567,7 @@ def update_overview_graph(column_name, y_axis_nucleotide, color_blind, at_scale,
                           tickvals=[-3.745898895, -2.3004650546666667, -0.8550312143333332, 0.590402626],
                           ticktext=['T', 'G', 'C', 'A'])
 
-    # Create an empty figure
     fig = go.Figure()
-
     # Iterate through the unique categories in your data in the custom order
     for category in CUSTOM_CAT_ORDER:
         if category in df_temp[column_name].unique():
