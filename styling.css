@@ -1,0 +1,164 @@
+.custom-h1 {
+    color: rgb(214,210,196); /* yel */
+    text-align: center;
+    margin-top: 60px;
+    margin-bottom: 40px;
+    font-family: Garamond;
+    font-size:35pt;
+}
+
+.my-custom-title{
+    color: rgb(214,210,196);
+    font-size: 18pt !important;
+    font-weight: bold !important;
+    font-family: Arial !important;
+}
+.custom-text {
+    font-family: Arial !important;
+    font-size: 15px !important;
+    color: rgb(214,210,196) !important; /* yel */
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.my-custom-background {
+    background-color: rgba(41,41,41,1) !important;/* Change this value to your desired color */
+}
+
+/* Change background color of the dropdown menu options*/
+.my-custom-dropdown .Select-menu-outer {
+  background-color: rgba(41,41,41,1); /* darkgray */
+}
+
+/* Change font color and background color of dropdown */
+.my-custom-dropdown .Select-control *{
+    color: black !important;
+    font-size: 15px !important;
+    background-color: rgb(214,210,196);
+}
+
+
+
+/* Change font color of dropdown options */
+.my-custom-dropdown {
+    color: rgb(214,210,196);
+    font-size: 15px !important;
+    font-family: Arial !important;
+    backgroundColor: rgb(214, 210, 196) !important;
+    background-color: rgb(214,210,196) !important;
+    position: relative;
+    z-index: 2;  /* Adjust the value as needed */
+}
+
+.my-custom-dropdown option {
+    background: blue;
+}
+/* Style label of BooleanSwitch */
+.my-custom-switch *{
+    color: rgb(214,210,196);
+    font-size: 15px !important;
+    font-family: Arial !important;
+}
+
+.custom-text_left {
+    font-family: Arial !important;
+    font-size: 15px !important;
+    color: rgb(214,210,196) !important; /* yel */
+    z-index: 1!important;
+}
+
+
+/* Tabs */
+.control-tabs {
+    background-color: rgba(41,41,41,1); /* darkgreent */
+        width: 100%;
+        margin: 0;
+        font-family: Arial !important;
+
+}
+
+.control-tabs .tab-content {
+    display: inline-block;
+    padding: 20px;
+
+}
+
+.control-tabs .tab {
+    background-color: rgb(140, 130, 121) !important; /* light gray */
+    font-size: 10pt!important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+
+
+}
+
+.control-tabs .tab--selected {
+    font-weight: bolder;
+    border: none;
+    background-color: rgba(41,41,41,1) !important; /* ldarkgray */
+    border-top: solid 3px rgb(246, 190, 0) !important;
+    color: rgb(246, 190, 0) !important /* yellow */
+
+}
+
+/* Control names */
+.app-controls-block {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    font-family: Garamond;
+    font-size:25pt;
+}
+.app-controls-name {
+    display: inline-block;
+    font-weight: 400;
+    vertical-align: top;
+    width: 160px;
+    font-size: 12pt;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.fullwidth-app-controls-name {
+    display: inline-block;
+    font-weight: 400;
+    vertical-align: top;
+    width: 100%;
+    font-size: 12pt;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+.app-controls-desc {
+    font-size: 9pt;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+abbr {
+  color: rgb(246, 190, 0) ; /*yellow;*/
+  text-decoration: none !important;
+  color: white;
+    font-size: 12pt;
+
+}
+
+abbr:hover::after {
+  content: ' (' attr(title) ')';
+  color: rgb(246, 190, 0) ; /*yellow;*/
+  font-size: 12pt;
+
+}
+
+/* style the links rgb(168,129,0)*/
+.custom-link{
+    font-size: 14pt;
+    color: rgb(246, 190, 0);
+
+}
+.custom-link:hover {
+    font-size: 20pt;
+    color: rgb(168,129,0) !important;
+}
