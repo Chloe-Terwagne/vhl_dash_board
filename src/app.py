@@ -196,8 +196,8 @@ def get_structure_file(selected_pdb_file):
     #old dir
     #parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/' + selected_pdb_file)
     print("previous path:", 'https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/' + selected_pdb_file)
-    print("new path:", 'https://github.com/Chloe-Terwagne/vhl_dash_board/tree/main/src/assets/input/3d_structure/' + selected_pdb_file)
-    parser = PdbParser('https://github.com/Chloe-Terwagne/vhl_dash_board/tree/main/src/assets/input/3d_structure/' + selected_pdb_file)    
+    print("new path:", 'https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/input/3d_structure/' + selected_pdb_file)
+    parser = PdbParser('https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/input/3d_structure/' + selected_pdb_file)    
     parser.mol3d_data()
     return parser.mol3d_data()
 
