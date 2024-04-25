@@ -16,17 +16,17 @@ import dash_bio as dashbio
 from dash_bio.utils import PdbParser
 from dash.development.base_component import Component, _explicitize_args
 import plotly.graph_objs as go
-import dash_auth
+# import dash_auth
 import dash_daq as daq
 
 
-VALID_USERNAME_PASSWORD_PAIRS = {
-    'vhl_viewer': 'fun456'
-}
+# VALID_USERNAME_PASSWORD_PAIRS = {
+#     'vhl_viewer': 'fun456'
+# }
 # Launch app------------------------------------------------------------------------------------------------
 app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY], suppress_callback_exceptions=True,
            meta_tags=[{'name': 'viewport', 'content': 'width=device-width, initial-scale=1.0'}])
-auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
+# auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
 server = app.server
 
 
