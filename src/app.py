@@ -166,7 +166,6 @@ def color_bar_structure():
 
 
 def variant_first_search_dropdown(list_var, df):
-    print('list_var', list_var)
     # variant to have first in the dropdown
     mask = df['cHGVS'].isin(list_var)
     df_display_first = df[mask]
@@ -193,10 +192,7 @@ def get_structure_file(selected_pdb_file):
         selected_pdb_file = '1LM8_vbch_isolated.pdb?raw=true'
     else:
         selected_pdb_file = '1LM8_vhl_isolated.pdb?raw=true'
-    #old dir
-    #parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/' + selected_pdb_file)
-    print("previous path:", 'https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/' + selected_pdb_file)
-    print("new path:", 'https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/input/3d_structure/' + selected_pdb_file)
+
     parser = PdbParser('https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/input/3d_structure/' + selected_pdb_file)    
     parser.mol3d_data()
     return parser.mol3d_data()
@@ -252,7 +248,6 @@ def print_var_score_for_selected_residue(df, aa_name):
 df = pd.read_csv('https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/input/vhl_preprocess_df.csv?raw=true')
 df['pHGVS'] = df['pHGVS'].fillna('N/A')
 df['consequence'] = df['consequence'].replace('Non synonymous', 'Missense')
-print(df.consequence.value_counts())
 exon_dict = {'exon 1b': [10141958, 10142087], 'exon 1a': [10142075, 10142202], 'exon 1p': [10142743, 10142876],
              'exon 2': [10146499, 10146644], 'exon 3a': [10149760, 10149887], 'exon 3b': [10149868, 10150002]}
 # Get text
@@ -591,8 +586,6 @@ def update_overview_graph(column_name, y_axis_nucleotide, color_blind, at_scale,
     # re-plot highlighted variants
     if variant_highlight is not None and variant_highlight != []:
         subset_var_highlight_df = df_temp[df_temp['variant_id'].isin(variant_highlight)]
-        print("subset_var_highlight_df:")
-        print(subset_var_highlight_df)
         highlight_trace = go.Scatter(
             x=subset_var_highlight_df[x_overv],
             y=subset_var_highlight_df[y_axis],
@@ -724,8 +717,6 @@ def update_2d_graph(color_column, slct_data, x_col, y_col, highlight_var, color_
             else:
                 # subset data based on selection
                 var = [slct_data['points'][i]['customdata'][0] for i in range(len(slct_data['points']))]
-
-                print("var:", var)
                 df_t = df_t[df_t.variant_id.isin(var)]
                 title = "Variants selected"
         else:
