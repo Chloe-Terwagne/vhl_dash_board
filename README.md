@@ -4,7 +4,7 @@
 ## Getting Started
 
 ### Online Version
-An online version of the app is also available at https://vhl_vizu_board.onrender.com/, but please note that it may be slower due to the limitations of the free deployment. It is recommended to run the app locally for optimal performance.
+You can access the online version of the app by visiting https://vhl-board.onrender.com. Please note that updates may take a few seconds to appear due to deployment limitations. For the best performance, we recommend running the app locally on your device.
 
 ### Prerequisites
 
