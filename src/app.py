@@ -16,20 +16,12 @@ import dash_bio as dashbio
 from dash_bio.utils import PdbParser
 from dash.development.base_component import Component, _explicitize_args
 import plotly.graph_objs as go
-# import dash_auth
 import dash_daq as daq
 
-
-# VALID_USERNAME_PASSWORD_PAIRS = {
-#     'vhl_viewer': 'fun456'
-# }
 # Launch app------------------------------------------------------------------------------------------------
 app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY], suppress_callback_exceptions=True,
            meta_tags=[{'name': 'viewport', 'content': 'width=device-width, initial-scale=1.0'}])
-# auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
 server = app.server
-
-
 
 # FONT & COLOR  ---------------------------------------------------------------
 font_list = ["Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
@@ -201,7 +193,9 @@ def get_structure_file(selected_pdb_file):
         selected_pdb_file = '1LM8_vbch_isolated.pdb?raw=true'
     else:
         selected_pdb_file = '1LM8_vhl_isolated.pdb?raw=true'
-    parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/' + selected_pdb_file)
+    #old dir
+    #parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/' + selected_pdb_file)
+    parser = PdbParser('https://github.com/Chloe-Terwagne/vhl_dash_board/tree/main/src/assets/input/3d_structure/' + selected_pdb_file)
     parser.mol3d_data()
     return parser.mol3d_data()
 
@@ -257,7 +251,9 @@ def print_var_score_for_selected_residue(df, aa_name):
 
 # MAIN ---------------------------------------------------------------------------------------------------------------
 # data
-df = pd.read_csv("https://github.com/Chloe-Terwagne/board_materials/blob/main/input/vhl_preprocess_df.csv?raw=true")
+#old dir
+# df = pd.read_csv("https://github.com/Chloe-Terwagne/board_materials/blob/main/input/vhl_preprocess_df.csv?raw=true")
+df = pd.read_csv('https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/input/vhl_preprocess_df.csv?raw=true')
 df['pHGVS'] = df['pHGVS'].fillna('N/A')
 df['consequence'] = df['consequence'].replace('Non synonymous', 'Missense')
 print(df.consequence.value_counts())
@@ -268,12 +264,15 @@ github_link = html.Div([
     html.A(
         id='gh-link',
         children=['View on GitHub'],
-        href="https://github.com/FrancisCrickInstitute/vhl_dash_board",
+        href="https://github.com/Chloe-Terwagne/vhl_dash_board",
         style={'margin-left': '20px', 'color': 'white', 'border': 'white', "text-decoration": 'none'},
         target="_blank"
     ),
-    html.Img(src='https://github.com/Chloe-Terwagne/board_materials/blob/main/GitHub-Mark-64px.png?raw=true',
-             style={'height': '30px', 'margin-left': '10px', 'margin-right': '20px'},
+    #old dir
+    #html.Img(src='https://github.com/Chloe-Terwagne/board_materials/blob/main/GitHub-Mark-64px.png?raw=true',
+    html.Img(src='https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/GitHub-Mark-64px.png?raw=true',
+
+                      style={'height': '30px', 'margin-left': '10px', 'margin-right': '20px'},
              ),
 ], style={
     'display': 'flex',
@@ -290,7 +289,9 @@ github_link = html.Div([
 links_content = dbc.Card(
     [html.Div(
         dbc.CardImg(
-            src="https://github.com/Chloe-Terwagne/board_materials/blob/main/CRICK_Logotype_white_RGB.png?raw=true",
+            #old dir
+            #src="https://github.com/Chloe-Terwagne/board_materials/blob/main/CRICK_Logotype_white_RGB.png?raw=true",
+            src="https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/CRICK_Logotype_white_RGB.png?raw=true",
             style={'width': '100px'},  # Set the specific width here
             top=True
         ),
@@ -326,7 +327,10 @@ links_content = dbc.Card(
 
 # Build your components------------------------------------------------------------------------------------------------
 # 3D parsing & styling
-parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/1LM8_vhl_isolated.pdb?raw=true')
+#old dir
+#parser = PdbParser('https://github.com/Chloe-Terwagne/board_materials/blob/main/input/3d_structure/1LM8_vhl_isolated.pdb?raw=true')
+parser = PdbParser('https://github.com/Chloe-Terwagne/vhl_dash_board/blob/main/src/assets/input/3d_structure/1LM8_vhl_isolated.pdb?raw=true')
+
 v_data = parser.mol3d_data()
 styles = create_style_3d(
     df, 'average_fs_missense_at_aa_rna', v_data['atoms'], visualization_type='cartoon', color_element='residue_score')
