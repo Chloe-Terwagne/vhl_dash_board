@@ -4,6 +4,7 @@
     Date : 20 June 2023
     Python version 3.9
 """
+
 # IMPORT ---------------------------------------------------------------
 
 from dash import Dash, dcc, html, Output, Input, dash_table
