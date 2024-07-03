@@ -292,8 +292,8 @@ links_content = dbc.Card(
                         github_link
                     ], style={'display': 'flex', 'flex-direction': 'row', 'justify-content': 'flex-start', 'margin-left': '300px'}),
                     html.Div([
-                        dbc.CardLink(["M.Buckley", html.Em(" et al."), ', 2023'],
-                                     href="https://doi.org/10.1101/2023.06.10.542698",
+                        dbc.CardLink(["M.Buckley", html.Em(" et al."), ', 2024'],
+                                     href="https://www.nature.com/articles/s41588-024-01800-z",
                                      target="_blank", className='custom-link', style={'text-decoration': 'none'}),
                     ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-start'}),
                     html.Div([
